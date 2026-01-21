@@ -1,0 +1,30 @@
+# nginx proxy address - http://172.17.0.1:3100
+
+name: loki
+x-logging: &default-logging
+  options:
+    max-size: '5m'
+    max-file: '1'
+  driver: json-file
+
+services:
+  app:
+    image: grafana/loki:latest
+    container_name: loki-app
+    hostname: ${BASE_HOST_NAME:-$HOSTNAME}
+    restart: always
+    pull_policy: always
+    logging: *default-logging
+    environment:
+      TZ: ${TZ:-America/New_York}
+    ports:
+      - '172.17.0.1:3100:3100'
+    volumes:
+      - './rootfs/data/loki:/data'
+    networks:
+      - loki
+
+networks:
+  loki:
+    name: loki
+    external: false

@@ -1,41 +1,81 @@
 ## 👋 Welcome to loki 🚀
 
-Loki - Log aggregation system
+Horizontally scalable log aggregation system
 
 ## 📋 Description
 
-Log aggregation system
+Horizontally scalable log aggregation system
 
 ## 🚀 Services
 
-- **app**: Loki (`grafana/loki:latest`)
+- **app**: grafana/loki:latest
 
 ## 📦 Installation
 
-```shell
+### Option 1: Quick Install
+```bash
+curl -q -LSsf "https://raw.githubusercontent.com/composemgr/loki/main/docker-compose.yaml" -o compose.yml
+```
+
+### Option 2: Git Clone
+```bash
+git clone "https://github.com/composemgr/loki" ~/.local/srv/docker/loki
+cd ~/.local/srv/docker/loki
+docker compose up -d
+```
+
+### Option 3: Using composemgr
+```bash
 composemgr install loki
 ```
 
 ## 🔧 Configuration
 
+### Environment Variables
+
 ```shell
 TZ=America/New_York
-BASE_HOST_NAME=loki.example.com
 ```
+
+See `docker-compose.yaml` for complete list of configurable options.
 
 ## 🌐 Access
 
-- **Loki**: http://localhost:3100
+- **Web Interface**: http://172.17.0.1:3100
 
 ## 📂 Volumes
 
-- `./rootfs/data/loki` - Application data
+- `./rootfs/data/loki` - Data storage
 
-## 🔐 Security
+## 🔍 Logging
 
-- Change default passwords
-- Configure HTTPS with reverse proxy
-- Regular backups
+```shell
+docker compose logs -f app
+```
+
+## 🛠️ Management
+
+```bash
+# Start services
+docker compose up -d
+
+# Stop services
+docker compose down
+
+# Update to latest images
+docker compose pull && docker compose up -d
+
+# View logs
+docker compose logs -f
+
+# Restart services
+docker compose restart
+```
+
+## 📋 Requirements
+
+- Docker Engine 20.10+
+- Docker Compose V2+
 
 ## 🤝 Author
 

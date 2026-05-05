@@ -20,7 +20,7 @@ services:
     ports:
       - '172.17.0.1:3100:3100'
     volumes:
-      - './rootfs/data/loki:/data'
+      - './volumes/data/loki:/data'
     networks:
       - loki
 

@@ -45,7 +45,7 @@ See `docker-compose.yaml` for complete list of configurable options.
 
 ## 📂 Volumes
 
-- `./rootfs/data/loki` - Data storage
+- `./volumes/data/loki` - Data storage
 
 ## 🔍 Logging
 

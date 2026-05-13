@@ -19,10 +19,12 @@ services:
       TZ: ${TZ:-America/New_York}
       CONTAINER_NAME: loki-app
       HOSTNAME: ${BASE_HOST_NAME:-$HOSTNAME}
+    command: -config.file=/etc/loki/loki.yaml
     ports:
       - '172.17.0.1:3100:3100'
     volumes:
-      - './volumes/data/loki:/data'
+      - './volumes/config/loki/loki.yaml:/etc/loki/loki.yaml:ro'
+      - './volumes/data/loki:/loki'
     networks:
       - loki
       - proxy

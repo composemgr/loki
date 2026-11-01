@@ -1,4 +1,4 @@
-# nginx proxy address - http://172.17.0.1:3100
+# nginx proxy address - http://172.17.0.1:64240
 
 name: loki
 x-logging: &default-logging
@@ -11,46 +11,25 @@ services:
   app:
     image: grafana/loki:latest
     container_name: loki-app
+    domainname: ${BASE_DOMAIN_NAME:-example.com}
     hostname: ${BASE_HOST_NAME:-$HOSTNAME}
     restart: always
     pull_policy: always
+    command: -config.file=/etc/loki/loki.yaml
     logging: *default-logging
     environment:
       TZ: ${TZ:-America/New_York}
       CONTAINER_NAME: loki-app
       HOSTNAME: ${BASE_HOST_NAME:-$HOSTNAME}
-    command: -config.file=/etc/loki/loki.yaml
     ports:
-      - '172.17.0.1:3100:3100'
+      - '172.17.0.1:64240:3100'
     volumes:
       - './volumes/config/loki/loki.yaml:/etc/loki/loki.yaml:ro'
       - './volumes/data/loki:/loki'
     networks:
       - loki
-      - proxy
-      - cloudflare
-    labels:
-      - 'traefik.enable=true'
-      - 'cloudflare.enable=true'
-      - 'traefik.docker.network=proxy'
-      - 'cloudflare.service=http://loki-app:3100'
-      - 'cloudflare.hostname=loki.${CLOUDFLARE_ZONE_NAME:-}'
-      - 'traefik.http.routers.loki-app.entrypoints=http'
-      - 'traefik.http.routers.loki-app-secure.tls=true'
-      - 'traefik.http.routers.loki-app.rule=Host($(${BASE_HOST_NAME:-$HOSTNAME}))'
-      - 'traefik.http.middlewares.loki-app-https-redirect.redirectscheme.scheme=https'
-      - 'traefik.http.routers.loki-app.middlewares=loki-app-https-redirect'
-      - 'traefik.http.routers.loki-app-secure.entrypoints=https'
-      - 'traefik.http.routers.loki-app-secure.rule=Host($(${BASE_HOST_NAME:-$HOSTNAME}))'
-      - 'traefik.http.routers.loki-app-secure.tls.certresolver=cloudflare'
-      - 'traefik.http.routers.loki-app-secure.service=loki-app'
-      - 'traefik.http.services.loki-app.loadbalancer.server.port=3100'
 
 networks:
   loki:
     name: loki
     external: false
-  proxy:
-    external: true
-  cloudflare:
-    external: true
